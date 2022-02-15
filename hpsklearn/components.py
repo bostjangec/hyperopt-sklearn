@@ -130,9 +130,13 @@ def sklearn_LGBMRegressor(*args, **kwargs):
     return lightgbm.LGBMRegressor(*args, **kwargs)
 
 
-# @scope.define
-# def sklearn_Ridge(*args, **kwargs):
-#     return sklearn.linear_model.Ridge(*args, **kwargs)
+@scope.define
+def sklearn_LinearRegression(*args, **kwargs):
+    return sklearn.linear_model.LinearRegression(*args, **kwargs)
+
+@scope.define
+def sklearn_Ridge(*args, **kwargs):
+    return sklearn.linear_model.Ridge(*args, **kwargs)
 
 @scope.define
 def sklearn_PassiveAggressiveClassifier(*args, **kwargs):
@@ -1049,7 +1053,7 @@ def decision_tree(name,
 def lasso(name,
         alpha=None, # default - 1.0
         fit_intercept=True, # default - True
-        normalize=False, # default - False
+        # normalize=False, # default - False
         precompute=False, # default - False
         max_iter=None,
         tol=None,
@@ -1064,7 +1068,7 @@ def lasso(name,
         alpha=(_sgd_alpha(_name('alpha'))
                if alpha is None else alpha),
         fit_intercept=fit_intercept,
-        normalize=normalize,
+        # normalize=normalize,
         precompute=precompute,
         max_iter=(_svm_max_iter(_name('maxiter'))
                   if max_iter is None else max_iter),
@@ -1217,32 +1221,41 @@ def sgd_regression(name,
     )
     return rval
 
-# def ridge(name,
-#     alpha=None,           #default - 1.0
-#     normalize=None,       #default - False,
-#     tol=None,             #default - 0.001
-#     solver=None,          #default - 'auto'
-#     fit_intercept=None,   #default - True
-#     ):
+def linear_regression(name,
+    ):
 
-#     def _name(msg):
-#       return '%s.%s_%s' % (name, 'sgd', msg)
+    def _name(msg):
+      return '%s.%s_%s' % (name, 'sgd', msg)
 
-#     rval = scope.sklearn_Ridge(
-#         alpha=hp.loguniform(
-#             _name('alpha'),
-#             np.log(1e-3),
-#             np.log(1e3)) if alpha is None else alpha,
-#         normalize=hp.pchoice(
-#             _name('normalize'),
-#             [ (0.8, True), (0.2, False) ]) if normalize is None else normalize,
-#         fit_intercept=hp.pchoice(
-#             _name('fit_intercept'),
-#             [ (0.8, True), (0.2, False) ]) if fit_intercept is None else fit_intercept,
-#         tol=0.001 if tol is None else tol,
-#         solver="auto" if solver is None else solver,
-#         )
-#     return rval
+    rval = scope.sklearn_LinearRegression()
+    return rval
+
+def ridge(name,
+    alpha=None,           #default - 1.0
+    # normalize=None,       #default - False,
+    tol=None,             #default - 0.001
+    solver=None,          #default - 'auto'
+    fit_intercept=None,   #default - True
+    ):
+
+    def _name(msg):
+      return '%s.%s_%s' % (name, 'sgd', msg)
+
+    rval = scope.sklearn_Ridge(
+        alpha=hp.loguniform(
+            _name('alpha'),
+            np.log(1e-3),
+            np.log(1e3)) if alpha is None else alpha,
+        # normalize=hp.pchoice(
+        #     _name('normalize'),
+        #     [ (0.8, True), (0.2, False) ]) if normalize is None else normalize,
+        fit_intercept=hp.pchoice(
+            _name('fit_intercept'),
+            [ (0.8, True), (0.2, False) ]) if fit_intercept is None else fit_intercept,
+        tol=0.001 if tol is None else tol,
+        solver="auto" if solver is None else solver,
+        )
+    return rval
 
 
 ###################################################
